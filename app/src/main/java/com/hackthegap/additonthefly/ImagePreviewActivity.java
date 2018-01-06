@@ -10,7 +10,9 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
@@ -22,13 +24,21 @@ import java.io.IOException;
 public class ImagePreviewActivity extends AppCompatActivity {
     static final String TAG = "imagePreviewActicity";
     private ImageView mImageView;
+    private TextView mDetectedTextView;
+    private EditText mDateField;
+    private EditText mStartTime;
     private Uri mImagePath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
 
         mImageView = (ImageView) findViewById(R.id.previewImageView);
+        mDetectedTextView = (TextView) findViewById(R.id.detectedStringTextView);
+        mDateField = (EditText) findViewById(R.id.dateEditText);
+        mStartTime = (EditText) findViewById(R.id.timeEditText);
         mImagePath = (Uri) getIntent().getParcelableExtra("com.hackthegap.additonthefly.previewImage");
 
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
@@ -56,9 +66,13 @@ public class ImagePreviewActivity extends AppCompatActivity {
                 TextBlock textBlock = text.valueAt(i);
                 if (textBlock != null && textBlock.getValue() != null) {
                     Log.d("Processor", "Text detected! " + textBlock.getValue());
-                    detectedText += textBlock.getValue();
+                    detectedText += textBlock.getValue() + " \n ";
                 }
             }
+
+            Log.d("Processor", "Final String: " + detectedText);
+            mDetectedTextView.setText(detectedText);
+            parseFlyer(detectedText);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,6 +104,15 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
         Bitmap bitmap = BitmapFactory.decodeFile(mImagePath.toString(), bmOptions);
         mImageView.setImageBitmap(bitmap);
+    }
+
+    private void parseFlyer(String detectedText){
+        int timeIndex = detectedText.indexOf(':');
+        int dateIndex = detectedText.indexOf('/');
+        String time = detectedText.substring(timeIndex - 2, timeIndex + 3).trim();
+        String date = detectedText.substring(dateIndex - 2, dateIndex + 7).trim();
+        mDateField.setText(date);
+        mStartTime.setText(time);
     }
 
 }
