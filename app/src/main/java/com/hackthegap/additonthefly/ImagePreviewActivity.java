@@ -3,7 +3,6 @@ package com.hackthegap.additonthefly;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,7 +30,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
 
@@ -77,33 +75,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         textRecognizer.release();
-
-
-//        setPic();
-    }
-
-    private void setPic() {
-        // Get the dimensions of the View
-        int targetW = 400;//mImageView.getWidth();
-        int targetH = 200;//mImageView.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mImagePath.toString(), bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mImagePath.toString(), bmOptions);
-        mImageView.setImageBitmap(bitmap);
     }
 
     private void parseFlyer(String detectedText){
@@ -115,4 +86,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         mStartTime.setText(time);
     }
 
+    private void sendToServer(String time, String date, ) {
+
+    }
 }
