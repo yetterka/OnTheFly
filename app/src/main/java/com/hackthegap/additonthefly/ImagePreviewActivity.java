@@ -14,9 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -84,9 +93,49 @@ public class ImagePreviewActivity extends AppCompatActivity {
         String date = detectedText.substring(dateIndex - 2, dateIndex + 7).trim();
         mDateField.setText(date);
         mStartTime.setText(time);
+
+        // TODO: Hardcoded for now, need to make sure data are in the right format before we call sendToServer()
+        sendToServer("10:00", "11:00", "2018-01-20", "Hack The Gap");
     }
 
-    private void sendToServer(String time, String date, ) {
+    private void sendToServer(String startTime, String endTime, String date, String eventName) {
+        String endpoint = "https://enigmatic-stream-81819.herokuapp.com/";
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JSONObject payload = new JSONObject();
+        try {
+            JSONObject interestsJson = new JSONObject();
+            interestsJson.put("eventName", eventName);
+            payload.put("date", date); // Has to be in MM/dd/yyyy format
+            payload.put("startTime", startTime); // Has to be in HH:MM
+            payload.put("startap", "pm"); // Hardcoded by now, need to check for real
+            payload.put("endTime", endTime); // Has to be in HH:MM
+            payload.put("endap", "pm"); // Hardcoded by now, need to check for real
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, endpoint, payload, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, "Got response " + response.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ImagePreviewActivity.this, "Successfully sent to server", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error == null) return;
+                if (error.networkResponse == null) return;
+
+                Log.e(TAG, "error: " + error.toString());
+                error.printStackTrace();
+            }
+        });
+
+        queue.add(request);
     }
 }
