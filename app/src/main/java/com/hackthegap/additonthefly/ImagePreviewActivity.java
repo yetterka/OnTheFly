@@ -33,11 +33,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class ImagePreviewActivity extends AppCompatActivity {
-    static final String TAG = "imagePreviewActicity";
+    static final String TAG = "imagePreviewActivity";
     private ImageView mImageView;
     private EditText mDateField;
     private EditText mStartTime;
     private Uri mImagePath;
+    private EditText mNameField;
     private Button mAddToCalendarButton;
 
     @Override
@@ -50,6 +51,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         mDateField = (EditText) findViewById(R.id.dateEditText);
         mStartTime = (EditText) findViewById(R.id.timeEditText);
         mImagePath = (Uri) getIntent().getParcelableExtra("com.hackthegap.additonthefly.previewImage");
+        mNameField = (EditText) findViewById(R.id.nameEditText);
 
         mAddToCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,17 +101,21 @@ public class ImagePreviewActivity extends AppCompatActivity {
     private void parseFlyer(String detectedText){
         int timeIndex = detectedText.indexOf(':');
         int dateIndex = detectedText.indexOf('/');
+        int firstNew = detectedText.indexOf('\n');
+        int nameIndex = detectedText.indexOf('\n', firstNew + 1);
+
         String time = "";
         String date = "";
+        String name = "";
         if(timeIndex != -1)
             time = detectedText.substring(timeIndex - 2, timeIndex + 3).trim();
         if(dateIndex != -1)
             date = detectedText.substring(dateIndex - 2, dateIndex + 7).trim();
+        if(nameIndex != -1)
+            name = detectedText.substring(0, nameIndex).trim().replaceFirst("(\r\n|\r|\n)", " ");
         mDateField.setText(date);
         mStartTime.setText(time);
-
-        // TODO: Hardcoded for now, need to make sure data are in the right format before we call sendToServer()
-//        sendToServer("10:00", "11:00", "2018-01-20", "Hack The Gap");
+        mNameField.setText(name);
     }
 
     private void sendToServer(String startTime, String endTime, String date, String eventName) {
