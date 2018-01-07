@@ -33,11 +33,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class ImagePreviewActivity extends AppCompatActivity {
-    static final String TAG = "imagePreviewActicity";
+    static final String TAG = "imagePreviewActivity";
     private ImageView mImageView;
     private EditText mDateField;
     private EditText mStartTime;
     private Uri mImagePath;
+    private EditText mNameField;
     private Button mAddToCalendarButton;
 
     @Override
@@ -50,13 +51,14 @@ public class ImagePreviewActivity extends AppCompatActivity {
         mDateField = (EditText) findViewById(R.id.dateEditText);
         mStartTime = (EditText) findViewById(R.id.timeEditText);
         mImagePath = (Uri) getIntent().getParcelableExtra("com.hackthegap.additonthefly.previewImage");
+        mNameField = (EditText) findViewById(R.id.nameEditText);
 
         mAddToCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.w(TAG, startTimeFixer() + " \n" + dateFixer());
 
-                sendToServer(startTimeFixer(), endTimeFixer(), dateFixer(), "Hack The Gap"); // TODO: Hardcoded
+                sendToServer(startTimeFixer(), endTimeFixer(), dateFixer(), mNameField.getText().toString());
             }
         });
 
@@ -100,17 +102,21 @@ public class ImagePreviewActivity extends AppCompatActivity {
     private void parseFlyer(String detectedText){
         int timeIndex = detectedText.indexOf(':');
         int dateIndex = detectedText.indexOf('/');
+        int firstNew = detectedText.indexOf('\n');
+        int nameIndex = detectedText.indexOf('\n', firstNew + 1);
+
         String time = "";
         String date = "";
+        String name = "";
         if(timeIndex != -1)
             time = detectedText.substring(timeIndex - 2, timeIndex + 3).trim();
         if(dateIndex != -1)
             date = detectedText.substring(dateIndex - 2, dateIndex + 7).trim();
+        if(nameIndex != -1)
+            name = detectedText.substring(0, nameIndex).trim().replaceFirst("(\r\n|\r|\n)", " ");
         mDateField.setText(date);
         mStartTime.setText(time);
-
-        // TODO: Hardcoded for now, need to make sure data are in the right format before we call sendToServer()
-//        sendToServer("10:00", "11:00", "2018-01-20", "Hack The Gap");
+        mNameField.setText(name);
     }
 
     private void sendToServer(String startTime, String endTime, String date, String eventName) {
@@ -118,8 +124,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         JSONObject payload = new JSONObject();
         try {
-            JSONObject interestsJson = new JSONObject();
-            interestsJson.put("eventName", eventName);
+            payload.put("eventName", eventName);
             payload.put("date", date); // Has to be in MM/dd/yyyy format
             payload.put("startTime", startTime); // Has to be in HH:MM
             payload.put("startap", "pm"); // Hardcoded by now, need to check for real
@@ -165,15 +170,16 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
     private String dateFixer(){
         String dateA = mDateField.getText().toString();
-
-        String day = dateA.substring(0, dateA.indexOf("/") + 1);
+        int iOfSlash = dateA.indexOf('/');
+        int iOfSecSlash = dateA.indexOf('/', iOfSlash + 1);
+        String day = dateA.substring(0, dateA.indexOf("/"));
         String dayDone;
         if (day.length() == 1) {
             dayDone = "0" + day;
         } else {
             dayDone = day;
         }
-        String month = dateA.substring(dateA.indexOf("/", dateA.indexOf("/")));
+        String month = dateA.substring(iOfSlash + 1, dateA.indexOf("/", iOfSlash + 1));
         String monthDone;
         if (month.length() == 1) {
             monthDone = "0" + month;
@@ -181,7 +187,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
             monthDone = month;
         }
         String year = dateA.substring(dateA.length()-4);
-        return year + "-" + monthDone + "-" + dayDone;
+        return year + "-" + dayDone + "-" + monthDone;
     }
 
     private String startTimeFixer(){
