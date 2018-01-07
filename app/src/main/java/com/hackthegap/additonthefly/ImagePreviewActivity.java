@@ -57,6 +57,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.w(TAG, startTimeFixer() + " \n" + dateFixer());
+
                 sendToServer(startTimeFixer(), endTimeFixer(), dateFixer(), "Hack The Gap"); // TODO: Hardcoded
             }
         });
@@ -170,10 +171,23 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
     private String dateFixer(){
         String date = mDateField.getText().toString();
-        String day = date.substring(0, date.indexOf("/"));
-        String month = date.substring(date.indexOf("/", date.indexOf("/")));
-        String year = date.substring(date.length()-4);
-        return year + "-" + month + "-" + day;
+
+        String day = date.substring(0, date.indexOf("/") + 1);
+        String dayDone;
+        if (day.length() == 1) {
+            dayDone = "0" + day;
+        } else {
+            dayDone = day;
+        }
+        String month = dateA.substring(dateA.indexOf("/", dateA.indexOf("/")));
+        String monthDone;
+        if (month.length() == 1) {
+            monthDone = "0" + month;
+        } else {
+            monthDone = month;
+        }
+        String year = dateA.substring(dateA.length()-4);
+        return year + "-" + monthDone + "-" + dayDone;
     }
 
     private String startTimeFixer(){
@@ -181,7 +195,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         String hour = time.substring(0, time.indexOf(":"));
         String min = time.substring(time.indexOf(":") + 1);
         int start = Integer.parseInt(hour) + 12;
-        return (Integer.toString(start) + min);
+        return (Integer.toString(start) + ":" + min);
     }
 
     private String endTimeFixer(){
@@ -189,6 +203,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
         String hour = time.substring(0, time.indexOf(":"));
         String min = time.substring(time.indexOf(":") + 1);
         int start = Integer.parseInt(hour) + 13;
-        return (Integer.toString(start) + min);
+        return (Integer.toString(start) + ":" + min);
     }
 }
