@@ -1,11 +1,13 @@
 package com.hackthegap.additonthefly;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
@@ -55,8 +57,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         mAddToCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDateField.getText().toString();
-                sendToServer(startTime "10:00", endTime "11:00", date dateFixer();, eventName "Hack the Gap");
+                sendToServer("10:00", "11:00", dateFixer();, "Hack The Gap"); // TODO: Hardcoded
             }
         });
 
@@ -85,7 +86,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
                 TextBlock textBlock = text.valueAt(i);
                 if (textBlock != null && textBlock.getValue() != null) {
                     Log.d("Processor", "Text detected! " + textBlock.getValue());
-                    detectedText += textBlock.getValue() + " \n ";
+                    detectedText += textBlock.getValue() + " \n";
                 }
             }
 
@@ -101,13 +102,17 @@ public class ImagePreviewActivity extends AppCompatActivity {
     private void parseFlyer(String detectedText){
         int timeIndex = detectedText.indexOf(':');
         int dateIndex = detectedText.indexOf('/');
-        String time = detectedText.substring(timeIndex - 2, timeIndex + 3).trim();
-        String date = detectedText.substring(dateIndex - 2, dateIndex + 7).trim();
+        String time = "";
+        String date = "";
+        if(timeIndex != -1)
+            time = detectedText.substring(timeIndex - 2, timeIndex + 3).trim();
+        if(dateIndex != -1)
+            date = detectedText.substring(dateIndex - 2, dateIndex + 7).trim();
         mDateField.setText(date);
         mStartTime.setText(time);
 
         // TODO: Hardcoded for now, need to make sure data are in the right format before we call sendToServer()
-        sendToServer("10:00", "11:00", "2018-01-20", "Hack The Gap");
+//        sendToServer("10:00", "11:00", "2018-01-20", "Hack The Gap");
     }
 
     private void sendToServer(String startTime, String endTime, String date, String eventName) {
@@ -133,7 +138,16 @@ public class ImagePreviewActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(ImagePreviewActivity.this, "Successfully sent to server", Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(ImagePreviewActivity.this)
+                                .setTitle("Success!")
+                                .setMessage("The event was successfully added to your calendar.")
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        onBackPressed();
+                                        Toast.makeText(ImagePreviewActivity.this, "Successfully sent to calendar", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .show();
                     }
                 });
             }
