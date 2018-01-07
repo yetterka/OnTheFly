@@ -58,7 +58,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.w(TAG, startTimeFixer() + " \n" + dateFixer());
 
-                sendToServer(startTimeFixer(), endTimeFixer(), dateFixer(), "Hack The Gap"); // TODO: Hardcoded
+                sendToServer(startTimeFixer(), endTimeFixer(), dateFixer(), mNameField.getText().toString());
             }
         });
 
@@ -124,8 +124,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         JSONObject payload = new JSONObject();
         try {
-            JSONObject interestsJson = new JSONObject();
-            interestsJson.put("eventName", eventName);
+            payload.put("eventName", eventName);
             payload.put("date", date); // Has to be in MM/dd/yyyy format
             payload.put("startTime", startTime); // Has to be in HH:MM
             payload.put("startap", "pm"); // Hardcoded by now, need to check for real
@@ -170,16 +169,17 @@ public class ImagePreviewActivity extends AppCompatActivity {
     }
 
     private String dateFixer(){
-        String date = mDateField.getText().toString();
-
-        String day = date.substring(0, date.indexOf("/") + 1);
+        String dateA = mDateField.getText().toString();
+        int iOfSlash = dateA.indexOf('/');
+        int iOfSecSlash = dateA.indexOf('/', iOfSlash + 1);
+        String day = dateA.substring(0, dateA.indexOf("/"));
         String dayDone;
         if (day.length() == 1) {
             dayDone = "0" + day;
         } else {
             dayDone = day;
         }
-        String month = dateA.substring(dateA.indexOf("/", dateA.indexOf("/")));
+        String month = dateA.substring(iOfSlash + 1, dateA.indexOf("/", iOfSlash + 1));
         String monthDone;
         if (month.length() == 1) {
             monthDone = "0" + month;
@@ -187,7 +187,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
             monthDone = month;
         }
         String year = dateA.substring(dateA.length()-4);
-        return year + "-" + monthDone + "-" + dayDone;
+        return year + "-" + dayDone + "-" + monthDone;
     }
 
     private String startTimeFixer(){
