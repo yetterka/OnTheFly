@@ -164,9 +164,9 @@ public class ImagePreviewActivity extends AppCompatActivity {
     }
 
     private String dateFixer(){
-        String date = mDateField.getText().toString();
+        String dateA = mDateField.getText().toString();
 
-        String day = date.substring(0, date.indexOf("/") + 1);
+        String day = dateA.substring(0, dateA.indexOf("/") + 1);
         String dayDone;
         if (day.length() == 1) {
             dayDone = "0" + day;
