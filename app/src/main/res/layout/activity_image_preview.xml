@@ -12,6 +12,13 @@
         android:layout_width="300dp"
         android:layout_height="150dp" />
 
+    <TextView
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Please inspect the following information and correct any if necessary."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <RelativeLayout
         android:layout_marginStart="16dp"
         android:layout_width="match_parent"
