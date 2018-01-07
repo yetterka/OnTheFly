@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -36,7 +35,6 @@ import java.io.IOException;
 public class ImagePreviewActivity extends AppCompatActivity {
     static final String TAG = "imagePreviewActicity";
     private ImageView mImageView;
-    private TextView mDetectedTextView;
     private EditText mDateField;
     private EditText mStartTime;
     private Uri mImagePath;
@@ -49,7 +47,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
         mAddToCalendarButton = (Button) findViewById(R.id.addToCalendarButton);
         mImageView = (ImageView) findViewById(R.id.previewImageView);
-        mDetectedTextView = (TextView) findViewById(R.id.detectedStringTextView);
         mDateField = (EditText) findViewById(R.id.dateEditText);
         mStartTime = (EditText) findViewById(R.id.timeEditText);
         mImagePath = (Uri) getIntent().getParcelableExtra("com.hackthegap.additonthefly.previewImage");
@@ -91,7 +88,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
             }
 
             Log.d("Processor", "Final String: " + detectedText);
-            mDetectedTextView.setText(detectedText);
             parseFlyer(detectedText);
         } catch (IOException e) {
             e.printStackTrace();
