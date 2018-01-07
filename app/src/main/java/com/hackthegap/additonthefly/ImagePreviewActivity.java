@@ -56,7 +56,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mDateField.getText().toString();
-                //sendToServer();
+                sendToServer(startTime "10:00", endTime "11:00", date dateFixer();, eventName "Hack the Gap");
             }
         });
 
@@ -149,5 +149,13 @@ public class ImagePreviewActivity extends AppCompatActivity {
         });
 
         queue.add(request);
+    }
+
+    public static String dateFixer(){
+        String date = mDateField.getText().toString();
+        String day = date.substring(0, date.indexOf("/"));
+        String month = dateA.substring(dateA.indexOf("/", dateA.indexOf("/")));
+        String year = dateA.substring(dateA.length()-4);
+        return year + "-" + month + "-" + day;
     }
 }
