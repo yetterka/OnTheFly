@@ -57,7 +57,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         mAddToCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendToServer("10:00", "11:00", dateFixer();, "Hack The Gap"); // TODO: Hardcoded
+                sendToServer(startTimeFixer(), endTimeFixer() , dateFixer();, "Hack The Gap"); // TODO: Hardcoded
             }
         });
 
@@ -171,5 +171,21 @@ public class ImagePreviewActivity extends AppCompatActivity {
         String month = dateA.substring(dateA.indexOf("/", dateA.indexOf("/")));
         String year = dateA.substring(dateA.length()-4);
         return year + "-" + month + "-" + day;
+    }
+
+    public static String startTimeFixer(){
+        String time = mTimeField.getText().toString();
+        String hour = time.substring(0, time.indexOf(":"));
+        String min = time.substring(time.indexOf(":") + 1);
+        int start = Integer.parseInt(hour) + 12;
+        return (Integer.toString(start) + min);
+    }
+
+    public static String endTimeFixer(){
+        String time = mTimeField.getText().toString();
+        String hour = time.substring(0, time.indexOf(":"));
+        String min = time.substring(time.indexOf(":") + 1);
+        int start = Integer.parseInt(hour) + 13;
+        return (Integer.toString(start) + min);
     }
 }
