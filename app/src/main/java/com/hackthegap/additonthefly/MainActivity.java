@@ -6,10 +6,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button mTakePhotoButton;
+    private FloatingActionButton mTakePhotoButton;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     String mCurrentPhotoPath;
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTakePhotoButton = (Button) findViewById(R.id.takeAPhotoButton);
+        mTakePhotoButton = (FloatingActionButton) findViewById(R.id.takeAPhotoButton);
         mTakePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
