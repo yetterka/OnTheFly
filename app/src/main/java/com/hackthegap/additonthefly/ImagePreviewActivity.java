@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -36,7 +35,6 @@ import java.io.IOException;
 public class ImagePreviewActivity extends AppCompatActivity {
     static final String TAG = "imagePreviewActicity";
     private ImageView mImageView;
-    private TextView mDetectedTextView;
     private EditText mDateField;
     private EditText mStartTime;
     private Uri mImagePath;
@@ -49,7 +47,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
         mAddToCalendarButton = (Button) findViewById(R.id.addToCalendarButton);
         mImageView = (ImageView) findViewById(R.id.previewImageView);
-        mDetectedTextView = (TextView) findViewById(R.id.detectedStringTextView);
         mDateField = (EditText) findViewById(R.id.dateEditText);
         mStartTime = (EditText) findViewById(R.id.timeEditText);
         mImagePath = (Uri) getIntent().getParcelableExtra("com.hackthegap.additonthefly.previewImage");
@@ -57,6 +54,8 @@ public class ImagePreviewActivity extends AppCompatActivity {
         mAddToCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.w(TAG, startTimeFixer() + " \n" + dateFixer());
+
                 sendToServer(startTimeFixer(), endTimeFixer(), dateFixer(), "Hack The Gap"); // TODO: Hardcoded
             }
         });
@@ -91,7 +90,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
             }
 
             Log.d("Processor", "Final String: " + detectedText);
-            mDetectedTextView.setText(detectedText);
             parseFlyer(detectedText);
         } catch (IOException e) {
             e.printStackTrace();
@@ -165,8 +163,9 @@ public class ImagePreviewActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-    public static String dateFixer(){
+    private String dateFixer(){
         String date = mDateField.getText().toString();
+
         String day = date.substring(0, date.indexOf("/") + 1);
         String dayDone;
         if (day.length() == 1) {
@@ -185,16 +184,16 @@ public class ImagePreviewActivity extends AppCompatActivity {
         return year + "-" + monthDone + "-" + dayDone;
     }
 
-    public static String startTimeFixer(){
-        String time = mTimeField.getText().toString();
+    private String startTimeFixer(){
+        String time = mStartTime.getText().toString();
         String hour = time.substring(0, time.indexOf(":"));
         String min = time.substring(time.indexOf(":") + 1);
         int start = Integer.parseInt(hour) + 12;
         return (Integer.toString(start) + ":" + min);
     }
 
-    public static String endTimeFixer(){
-        String time = mTimeField.getText().toString();
+    private String endTimeFixer(){
+        String time = mStartTime.getText().toString();
         String hour = time.substring(0, time.indexOf(":"));
         String min = time.substring(time.indexOf(":") + 1);
         int start = Integer.parseInt(hour) + 13;
