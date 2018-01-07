@@ -57,7 +57,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         mAddToCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendToServer(startTimeFixer(), endTimeFixer() , dateFixer();, "Hack The Gap"); // TODO: Hardcoded
+                sendToServer(startTimeFixer(), endTimeFixer(), dateFixer();, "Hack The Gap"); // TODO: Hardcoded
             }
         });
 
