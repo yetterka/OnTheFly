@@ -9,6 +9,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,17 +38,27 @@ public class ImagePreviewActivity extends AppCompatActivity {
     private EditText mDateField;
     private EditText mStartTime;
     private Uri mImagePath;
+    private Button mAddToCalendarButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
 
+        mAddToCalendarButton = (Button) findViewById(R.id.addToCalendarButton);
         mImageView = (ImageView) findViewById(R.id.previewImageView);
         mDetectedTextView = (TextView) findViewById(R.id.detectedStringTextView);
         mDateField = (EditText) findViewById(R.id.dateEditText);
         mStartTime = (EditText) findViewById(R.id.timeEditText);
         mImagePath = (Uri) getIntent().getParcelableExtra("com.hackthegap.additonthefly.previewImage");
+
+        mAddToCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDateField.getText().toString();
+                //sendToServer();
+            }
+        });
 
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
         if (!textRecognizer.isOperational()) {

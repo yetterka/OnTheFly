@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/previewImageView"
-        android:layout_width="400dp"
-        android:layout_height="200dp" />
+        android:layout_width="300dp"
+        android:layout_height="150dp" />
 
     <RelativeLayout
         android:layout_marginStart="16dp"
@@ -82,6 +82,11 @@
         </LinearLayout>
     </RelativeLayout>
 
-
+    <Button
+        android:id="@+id/addToCalendarButton"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add to Calendar"/>
 
 </LinearLayout>
