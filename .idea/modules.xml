@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AddItOnTheFly.iml" filepath="$PROJECT_DIR$/AddItOnTheFly.iml" />
-      <module fileurl="file://$PROJECT_DIR$/OnTheFly.iml" filepath="$PROJECT_DIR$/OnTheFly.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
